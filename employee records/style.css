@@ -1,0 +1,202 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #f0f2f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 2rem;
+    color: #1a2a3a;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.card-header {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.card-header h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+}
+
+.btn {
+    display: inline-block;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.btn-primary {
+    background: #2c6e4e;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1e4f37;
+    transform: translateY(-1px);
+}
+
+.btn-warning {
+    background: #e6a017;
+    color: white;
+}
+
+.btn-danger {
+    background: #c0392b;
+    color: white;
+}
+
+.btn-sm {
+    padding: 0.3rem 1rem;
+    font-size: 0.8rem;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    padding: 0 1.5rem 1.5rem 1.5rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+th {
+    background: #f8fafc;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+tr:hover {
+    background: #f9fafb;
+}
+
+.search-bar {
+    margin: 1.5rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 0.7rem 1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 60px;
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+.form-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    background: white;
+    border-radius: 28px;
+    padding: 2rem;
+    box-shadow: 0 20px 35px -10px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.4rem;
+    color: #2d3748;
+}
+
+input, select {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 16px;
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #2c6e4e;
+    box-shadow: 0 0 0 3px rgba(44,110,78,0.1);
+}
+
+.error {
+    color: #c0392b;
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+}
+
+.alert {
+    padding: 0.8rem 1rem;
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+}
+
+.alert-danger {
+    background: #fbe9e7;
+    color: #c0392b;
+    border-left: 4px solid #c0392b;
+}
+
+.alert-success {
+    background: #e3f7ec;
+    color: #1e4f37;
+    border-left: 4px solid #1e4f37;
+}
+
+footer {
+    text-align: center;
+    margin-top: 2rem;
+    color: #6c757d;
+    font-size: 0.8rem;
+}
+
+.action-btns {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    body { padding: 1rem; }
+    .card-header { flex-direction: column; gap: 1rem; text-align: center; }
+    th, td { padding: 0.75rem; }
+}
