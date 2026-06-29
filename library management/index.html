@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Manager | Monolith</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background: #f9f3e7;
+            font-family: 'Open Sans', sans-serif;
+            padding: 2rem;
+            color: #2c2a24;
+        }
+        .container { max-width: 1300px; margin:0 auto; }
+        .card {
+            background: #fffef7;
+            border-radius: 28px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .card-header {
+            background: #9c5e3c;
+            color: #fef3e2;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .card-header h1 { font-family: 'Merriweather', serif; font-weight: 700; font-size: 1.8rem; }
+        .btn {
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Open Sans', sans-serif;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: #2f6b47; color: white; }
+        .btn-primary:hover { background: #1f4a31; }
+        .btn-warning { background: #d68b2c; color: white; }
+        .btn-danger { background: #bc4a2c; color: white; }
+        .btn-sm { padding: 0.3rem 1rem; font-size: 0.8rem; }
+        table { width:100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 1rem; border-bottom: 1px solid #e9e2d4; }
+        th { background: #f5ede3; font-weight: 600; }
+        .modal {
+            display: none; position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.4); justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: white; padding: 2rem; border-radius: 24px; width: 90%; max-width: 500px;
+        }
+        .form-group { margin-bottom: 1rem; }
+        label { font-weight: 600; display: block; margin-bottom: 0.4rem; }
+        input, select { width:100%; padding: 0.7rem; border:1px solid #d9cdb3; border-radius: 16px; font-family: inherit; }
+        .search-bar { margin-bottom: 1.8rem; display: flex; gap:0.8rem; }
+        .search-bar input { flex:1; }
+        footer { text-align: center; margin-top: 2rem; color: #8b765c; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1>📖 Library Book Management</h1>
+            <button class="btn btn-primary" onclick="openModal()">+ New Book</button>
+        </div>
+        <div style="padding: 2rem;">
+            <div class="search-bar">
+                <input type="text" id="searchBook" placeholder="Search by title, author, category..." onkeyup="renderBooks()">
+            </div>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead><tr><th>ID</th><th>Book ID</th><th>Title</th><th>Author</th><th>Category</th><th>Actions</th></tr></thead>
+                    <tbody id="bookList"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<div id="bookModal" class="modal">
+    <div class="modal-content">
+        <h2 id="modalBookTitle" style="margin-bottom: 1rem;">Add / Edit Book</h2>
+        <input type="hidden" id="editBookId">
+        <div class="form-group"><label>Book ID (unique)</label><input type="text" id="bookId" placeholder="e.g. B-1001"></div>
+        <div class="form-group"><label>Title</label><input type="text" id="title" placeholder="The Pragmatic Programmer"></div>
+        <div class="form-group"><label>Author</label><input type="text" id="author" placeholder="David Thomas"></div>
+        <div class="form-group"><label>Category</label><input type="text" id="category" placeholder="Technology"></div>
+        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+            <button class="btn" style="background:#ddd;" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveBook()">Save</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let books = JSON.parse(localStorage.getItem('libraryBooks')) || [];
+    let nextId = books.length ? Math.max(...books.map(b=>b.id)) + 1 : 1;
+
+    function saveBooks() { localStorage.setItem('libraryBooks', JSON.stringify(books)); }
+    function renderBooks() {
+        let search = document.getElementById('searchBook').value.toLowerCase();
+        let filtered = books.filter(b => b.title.toLowerCase().includes(search) || b.author.toLowerCase().includes(search) || b.category.toLowerCase().includes(search));
+        let tbody = document.getElementById('bookList');
+        if(filtered.length===0) { tbody.innerHTML='<tr><td colspan="6">No books found</td></tr>'; return; }
+        tbody.innerHTML = filtered.map(b => `
+            <tr>
+                <td>${b.id}</td><td>${escapeHtml(b.bookId)}</td><td>${escapeHtml(b.title)}</td><td>${escapeHtml(b.author)}</td><td>${escapeHtml(b.category)}</td>
+                <td><button class="btn btn-warning btn-sm" onclick="editBook(${b.id})">Edit</button> <button class="btn btn-danger btn-sm" onclick="deleteBook(${b.id})">Delete</button></td>
+            </tr>
+        `).join('');
+    }
+    function openModal(book=null) {
+        document.getElementById('bookModal').style.display = 'flex';
+        if(book) {
+            document.getElementById('editBookId').value = book.id;
+            document.getElementById('bookId').value = book.bookId;
+            document.getElementById('title').value = book.title;
+            document.getElementById('author').value = book.author;
+            document.getElementById('category').value = book.category;
+        } else {
+            document.getElementById('editBookId').value = '';
+            document.getElementById('bookId').value = '';
+            document.getElementById('title').value = '';
+            document.getElementById('author').value = '';
+            document.getElementById('category').value = '';
+        }
+    }
+    function closeModal() { document.getElementById('bookModal').style.display = 'none'; }
+    function saveBook() {
+        let id = document.getElementById('editBookId').value;
+        let bookId = document.getElementById('bookId').value.trim();
+        let title = document.getElementById('title').value.trim();
+        let author = document.getElementById('author').value.trim();
+        let category = document.getElementById('category').value.trim();
+        if(!bookId || !title || !author || !category) { alert('All fields required'); return; }
+        if(id) {
+            let idx = books.findIndex(b=>b.id==id);
+            if(idx!==-1) books[idx] = {...books[idx], bookId, title, author, category};
+        } else {
+            if(books.some(b=>b.bookId===bookId)) { alert('Book ID must be unique'); return; }
+            books.push({ id: nextId++, bookId, title, author, category });
+        }
+        saveBooks(); renderBooks(); closeModal();
+    }
+    function editBook(id) { let b = books.find(b=>b.id===id); if(b) openModal(b); }
+    function deleteBook(id) { if(confirm('Remove this book?')) { books = books.filter(b=>b.id!==id); saveBooks(); renderBooks(); } }
+    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){return m==='&'?'&amp;':m==='<'?'&lt;':'&gt;';}); }
+    window.onload = renderBooks;
+    window.onclick = e => { if(e.target===document.getElementById('bookModal')) closeModal(); };
+</script>
+</body>
+</html>

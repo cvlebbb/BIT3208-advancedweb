@@ -1,0 +1,21 @@
+
+CREATE DATABASE IF NOT EXISTS `week5db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `week5db`;
+
+-- 1. Create 'users' table
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `username` VARCHAR(100) NOT NULL UNIQUE,
+  `email` VARCHAR(100) NOT NULL,
+  `password` VARCHAR(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 2. Create 'items' table
+CREATE TABLE IF NOT EXISTS `items` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `item_name` VARCHAR(200) NOT NULL,
+  `description` TEXT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
